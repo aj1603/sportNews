@@ -4,6 +4,7 @@ import (
 	"io"
 	"os"
 	"sport_news/config"
+	user "sport_news/src/api/user"
 	"sport_news/src/tools"
 
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,8 @@ func set_mode(mode string) {
 }
 
 func set_routers(router *gin.Engine) {
+	create_router(router, "user", user.Controller)
+
 }
 
 func create_router(
