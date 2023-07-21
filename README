@@ -1,0 +1,37 @@
+.env file example
+///
+PORT = 0000
+DB_URI = postgres://username:password@localhost:5432/database_name
+HOST = 0.0.0.0
+GIN_MODE = debug
+SECRET_KEY = same_magic_word
+
+
+Users api
+
+///
+
+POST server_ip:8091/user/register    //for user register
+{
+  "name": "Mergen",
+  "password": "mergen",
+  "email": "mergen@gmail.com",
+  "phone_num": 64806469
+}
+
+POST server_ip:8091/user/update/:id    //for user update data
+{
+  "name": "Mergen",
+  "password": "mergen",
+  "email": "mergen@gmail.com",
+  "phone_num": 64806469
+}
+
+POST server_ip:8091/user/login     //for user login
+{
+  "name": "Mergen",
+  "password": "mergen",
+  "phone_num": 64806469
+}
+
+///
