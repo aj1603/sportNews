@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS sport_news;
+CREATE DATABASE sport_news;
