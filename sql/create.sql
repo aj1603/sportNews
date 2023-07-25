@@ -36,7 +36,7 @@ CREATE TABLE subcategories (
             REFERENCES categories (id)
 );
 
-CREATE TABLE newies (
+CREATE TABLE news (
     id SERIAL PRIMARY KEY,
     title VARCHAR,
     context VARCHAR,
@@ -61,6 +61,35 @@ CREATE TABLE news_img (
     CONSTRAINT news_id
         FOREIGN KEY (news_id)
             REFERENCES news (id)
+);
+
+CREATE TABLE athlete (
+    id SERIAL PRIMARY KEY,
+    "name" VARCHAR,
+    surname VARCHAR,
+    father_name INTEGER,
+    "description" VARCHAR,
+    is_turkmen INTEGER,
+    categories_id INTEGER,
+    subcategories_id INTEGER,
+
+    CONSTRAINT categories_id
+        FOREIGN KEY (categories_id)
+            REFERENCES categories (id),
+
+    CONSTRAINT subcategories_id
+        FOREIGN KEY (subcategories_id)
+            REFERENCES subcategories (id)
+);
+
+CREATE TABLE athlete_img (
+    id SERIAL PRIMARY KEY,
+    img_url VARCHAR,
+    athlete_id INTEGER,
+
+    CONSTRAINT athlete_id
+        FOREIGN KEY (athlete_id)
+            REFERENCES athlete (id)
 );
 
 CREATE TABLE categories_tran (
