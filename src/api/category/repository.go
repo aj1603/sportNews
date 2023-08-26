@@ -50,33 +50,43 @@ func get_by_category_id_(id int) res.Category {
 			c.id,
 			c.name,
 			c.img_url,
-			array_agg(jsonb_build_object(
-				'id', p.id,
-				'name', p.name,
-				'description', p.description,
-				'price', p.price::float,
-				'product_sku', p.product_sku,
-				'quantity', p.quantity,
-				'categories_id', p.categories_id,
-				'discounts_id', p.discounts_id,
-				'brands_id', p.brands_id,
-				'images', pi.images
-			)) AS products
+			(
+				SELECT
+					jsonb_agg(jsonb_build_object(
+						'id', sc.id,
+						'name', sc.name,
+						'img_url', sc.img_url,
+						'categories_id', sc.categories_id,
+						'news', (
+							SELECT
+								jsonb_agg(jsonb_build_object(
+									'id', n.id,
+									'title', n.title,
+									'context', n.context,
+									'type', n.type,
+									'subcategories_id', n.subcategories_id,
+									'categories_id', n.categories_id,
+									'news_images', (
+										SELECT
+											jsonb_agg(jsonb_build_object(
+												'id', ni.id,
+												'img_url', ni.img_url,
+												'news_id', ni.news_id
+											))
+										FROM news_img ni
+										WHERE ni.news_id = n.id
+									)
+								))
+							FROM news n
+							WHERE n.subcategories_id = sc.id
+						)
+					))
+				FROM subcategories sc
+				WHERE sc.categories_id = c.id
+			) AS news_category
 		FROM categories c
-		LEFT JOIN products p ON p.categories_id = c.id
-		LEFT JOIN (
-			SELECT
-				products_id,
-				array_agg(jsonb_build_object(
-					'id', id,
-					'img_url', img_url,
-					'products_id', products_id
-				)) AS images
-			FROM products_images
-			GROUP BY products_id
-		) pi ON pi.products_id = p.id
 		WHERE c.id = $1
-		GROUP BY c.id, c.name`,
+		GROUP BY c.id`,
 		id,
 	).Scan(&category.ID, &category.NAME, &category.IMG_URL, &category.NEWS)
 	return category
